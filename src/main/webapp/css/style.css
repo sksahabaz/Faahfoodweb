@@ -1,0 +1,2848 @@
+/* =========================================================
+   FAah!! FOOD - GLOBAL RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans',
+                 system-ui,
+                 -apple-system,
+                 BlinkMacSystemFont,
+                 'Segoe UI',
+                 Roboto,
+                 sans-serif;
+
+    color: #1E293B;
+    background: #F8FAFC;
+}
+
+
+/* =========================================================
+   BRAND VARIABLES
+========================================================= */
+
+:root {
+    --ff-brand-blue: #1124AD;
+    --ff-brand-blue-hover: #0d1c8a;
+    --ff-brand-blue-light: #EEF2FF;
+    --ff-brand-blue-subtle: rgba(17, 36, 173, 0.08);
+
+    --ff-text-main: #1E293B;
+    --ff-text-muted: #64748B;
+    --ff-text-subtle: #94A3B8;
+
+    --ff-border: #E2E8F0;
+    --ff-bg-input: #F8FAFC;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.faah-navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 74px;
+
+    background: #FFFFFF;
+
+    border-bottom: 1px solid var(--ff-border);
+
+    box-shadow:
+        0 4px 20px -2px rgba(17, 36, 173, 0.06),
+        0 2px 6px -1px rgba(0, 0, 0, 0.04);
+
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+}
+
+
+/* =========================================================
+   NAVBAR CONTAINER
+========================================================= */
+
+.faah-nav-container {
+    width: 100%;
+    max-width: 1380px;
+
+    margin: 0 auto;
+
+    padding: 0 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.faah-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    text-decoration: none;
+
+    flex-shrink: 0;
+}
+
+.faah-brand-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1124AD 0%,
+            #253BE6 100%
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #FFFFFF;
+
+    box-shadow:
+        0 4px 12px rgba(17, 36, 173, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.faah-brand:hover .faah-brand-icon {
+    transform: translateY(-1px) scale(1.02);
+
+    box-shadow:
+        0 6px 16px rgba(17, 36, 173, 0.32);
+}
+
+.faah-brand-text {
+    display: flex;
+    flex-direction: column;
+
+    line-height: 1;
+}
+
+.faah-brand-name {
+    font-size: 1.28rem;
+
+    font-weight: 800;
+
+    letter-spacing: -0.02em;
+
+    color: var(--ff-brand-blue);
+
+    display: flex;
+    align-items: center;
+
+    gap: 2px;
+}
+
+.faah-brand-name span {
+    color: #F59E0B;
+    font-weight: 900;
+}
+
+.faah-brand-sub {
+    font-size: 0.68rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.22em;
+
+    text-transform: uppercase;
+
+    color: var(--ff-text-muted);
+
+    margin-top: 3px;
+}
+
+
+/* =========================================================
+   CENTER AREA
+========================================================= */
+
+.faah-nav-center {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    flex: 1;
+
+    max-width: 650px;
+}
+
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+.faah-location-picker {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 14px;
+
+    background: var(--ff-bg-input);
+
+    border: 1px solid var(--ff-border);
+
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+
+    color: inherit;
+
+    transition: all 0.2s ease;
+}
+
+.faah-location-picker:hover {
+    background: var(--ff-brand-blue-light);
+
+    border-color:
+        rgba(17, 36, 173, 0.3);
+}
+
+.faah-loc-icon {
+    color: var(--ff-brand-blue);
+
+    display: flex;
+    align-items: center;
+}
+
+.faah-loc-text {
+    font-size: 0.86rem;
+
+    font-weight: 600;
+
+    color: var(--ff-text-main);
+
+    white-space: nowrap;
+}
+
+.faah-loc-chevron {
+    display: flex;
+    align-items: center;
+
+    color: var(--ff-text-muted);
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.faah-search-wrapper {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+}
+
+.faah-search-icon {
+    position: absolute;
+
+    left: 14px;
+
+    color: var(--ff-text-subtle);
+
+    display: flex;
+    align-items: center;
+}
+
+.faah-search-input {
+    width: 100%;
+
+    height: 42px;
+
+    padding:
+        0 40px 0 42px;
+
+    font-family: inherit;
+
+    font-size: 0.88rem;
+
+    font-weight: 500;
+
+    color: var(--ff-text-main);
+
+    background: var(--ff-bg-input);
+
+    border: 1px solid var(--ff-border);
+
+    border-radius: 999px;
+
+    outline: none;
+
+    transition: all 0.2s ease;
+}
+
+.faah-search-input::placeholder {
+    color: var(--ff-text-subtle);
+
+    font-weight: 400;
+}
+
+.faah-search-input:focus {
+    background: #FFFFFF;
+
+    border-color:
+        var(--ff-brand-blue);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(17, 36, 173, 0.12);
+}
+
+
+/* =========================================================
+   RIGHT NAVIGATION
+========================================================= */
+
+.faah-nav-right {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+.faah-nav-links {
+    display: flex;
+    align-items: center;
+
+    list-style: none;
+
+    gap: 4px;
+}
+
+.faah-nav-link {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 8px 14px;
+
+    font-size: 0.92rem;
+
+    font-weight: 600;
+
+    color: var(--ff-text-muted);
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    transition: all 0.2s ease;
+}
+
+.faah-nav-link:hover {
+    color: var(--ff-brand-blue);
+
+    background:
+        var(--ff-brand-blue-subtle);
+}
+
+.faah-nav-link.active {
+    color: var(--ff-brand-blue);
+
+    background:
+        var(--ff-brand-blue-light);
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.faah-divider {
+    width: 1px;
+
+    height: 26px;
+
+    background: var(--ff-border);
+
+    margin: 0 4px;
+}
+
+
+/* =========================================================
+   ICON BUTTON
+========================================================= */
+
+.faah-icon-btn {
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    background: transparent;
+
+    border: 1px solid transparent;
+
+    border-radius: 10px;
+
+    color: var(--ff-text-main);
+
+    text-decoration: none;
+
+    transition: all 0.2s ease;
+}
+
+.faah-icon-btn:hover {
+    background:
+        var(--ff-brand-blue-subtle);
+
+    color: var(--ff-brand-blue);
+
+    border-color:
+        rgba(17, 36, 173, 0.15);
+}
+
+
+/* =========================================================
+   USER
+========================================================= */
+
+.faah-user-pill {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    background: var(--ff-bg-input);
+
+    border: 1px solid var(--ff-border);
+
+    border-radius: 50%;
+
+    text-decoration: none;
+
+    transition: all 0.2s ease;
+}
+
+.faah-user-pill:hover {
+    background:
+        var(--ff-brand-blue-light);
+
+    border-color:
+        rgba(17, 36, 173, 0.3);
+}
+
+.faah-user-avatar {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: var(--ff-brand-blue);
+
+    color: #FFFFFF;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 0.78rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   MOBILE BUTTON
+========================================================= */
+
+.faah-mobile-toggle {
+    display: none;
+
+    background: none;
+
+    border: 1px solid var(--ff-border);
+
+    border-radius: 8px;
+
+    width: 40px;
+    height: 40px;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    color: var(--ff-text-main);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1080px) {
+
+    .faah-nav-center {
+        max-width: 480px;
+    }
+
+}
+
+@media (max-width: 900px) {
+
+    .faah-nav-center {
+        max-width: 360px;
+    }
+
+    .faah-nav-link {
+        padding: 8px 10px;
+
+        font-size: 0.88rem;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .faah-navbar {
+        height: 68px;
+    }
+
+    .faah-nav-center {
+        display: none;
+    }
+
+    .faah-nav-links {
+        display: none;
+    }
+
+    .faah-divider {
+        display: none;
+    }
+
+    .faah-mobile-toggle {
+        display: flex;
+    }
+
+}
+
+
+
+
+/* =========================================================
+   HERO SECTION
+========================================================= */
+
+.faah-hero-section {
+    position: relative;
+
+    width: 92%;
+    max-width: 1240px;
+
+    margin: 28px auto 50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1124AD 0%,
+            #0E1B78 100%
+        );
+
+    border-radius: 22px;
+
+    padding: 56px;
+
+    overflow: hidden;
+
+    color: #FFFFFF;
+
+    box-shadow:
+        0 20px 45px -15px
+        rgba(17, 36, 173, 0.35);
+}
+
+
+/* Decorative glow */
+
+.faah-hero-section::before {
+    content: "";
+
+    position: absolute;
+
+    top: -120px;
+    right: -80px;
+
+    width: 550px;
+    height: 550px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,0.12) 0%,
+            rgba(255,255,255,0) 70%
+        );
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+/* Hero layout */
+
+.hero-container {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 48px;
+}
+
+
+/* LEFT */
+
+.hero-content {
+    flex: 1 1 54%;
+
+    max-width: 580px;
+}
+
+
+.hero-eyebrow {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    background:
+        rgba(255,255,255,0.14);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.22);
+
+    color: #FFDE59;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    padding: 6px 14px;
+
+    border-radius: 999px;
+
+    margin-bottom: 20px;
+}
+
+
+.hero-headline {
+    font-size: 52px;
+
+    font-weight: 900;
+
+    line-height: 1.12;
+
+    letter-spacing: -1px;
+
+    color: #FFFFFF;
+
+    margin-bottom: 20px;
+
+    text-transform: uppercase;
+}
+
+
+.highlight-word {
+    color: #FFDD53;
+}
+
+
+.hero-description {
+    font-size: 17px;
+
+    line-height: 1.6;
+
+    color:
+        rgba(255,255,255,0.88);
+
+    margin-bottom: 30px;
+
+    max-width: 490px;
+}
+
+
+/* BUTTON */
+
+.hero-action-group {
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 34px;
+}
+
+
+.hero-primary-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    background: #FFFFFF;
+
+    color: #1124AD;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    padding: 14px 28px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    border: 2px solid #FFFFFF;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0,0,0,0.18);
+
+    transition:
+        all 0.25s ease;
+}
+
+
+.hero-primary-btn:hover {
+    background: #FFDD53;
+
+    border-color: #FFDD53;
+
+    color: #0E1B78;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.btn-arrow {
+    transition:
+        transform 0.2s ease;
+}
+
+
+.hero-primary-btn:hover .btn-arrow {
+    transform:
+        translateX(4px);
+}
+
+
+/* TRUST */
+
+.hero-trust-indicators {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 22px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,0.16);
+}
+
+
+.trust-item {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color:
+        rgba(255,255,255,0.95);
+}
+
+
+.trust-badge-icon {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 20px;
+
+    height: 20px;
+
+    background:
+        rgba(255,255,255,0.2);
+
+    color: #38EF7D;
+
+    border-radius: 50%;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   HERO FOOD IMAGE
+========================================================= */
+
+.hero-visual-wrapper {
+    flex: 1 1 46%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    position: relative;
+}
+
+
+.food-stage {
+    position: relative;
+
+    width: 410px;
+
+    height: 410px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+.stage-backdrop-ring {
+    position: absolute;
+
+    inset: -16px;
+
+    border-radius: 50%;
+
+    border:
+        2px dashed
+        rgba(255,255,255,0.22);
+}
+
+
+.stage-backdrop-glow {
+    position: absolute;
+
+    inset: 8px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.1);
+
+    box-shadow:
+        0 16px 40px
+        rgba(0,0,0,0.25);
+}
+
+
+.food-image-frame {
+    position: relative;
+
+    width: 370px;
+
+    height: 370px;
+
+    border-radius: 50%;
+
+    padding: 10px;
+
+    background: #FFFFFF;
+
+    box-shadow:
+        0 20px 48px
+        rgba(0,0,0,0.32);
+
+    overflow: hidden;
+
+    z-index: 3;
+}
+
+
+.hero-food-image {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    display: block;
+
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
+}
+
+
+/* =========================================================
+   FLOATING BADGES
+========================================================= */
+
+.floating-pill {
+    position: absolute;
+
+    background:
+        rgba(255,255,255,0.96);
+
+    color: #0E1B78;
+
+    border-radius: 999px;
+
+    padding: 9px 14px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 10px 24px
+        rgba(0,0,0,0.2);
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    z-index: 4;
+}
+
+
+.pill-top-left {
+    top: 14px;
+    left: -20px;
+}
+
+
+.pill-bottom-right {
+    bottom: 24px;
+    right: -15px;
+}
+
+
+.pill-star {
+    color: #FFA000;
+}
+
+
+/* =========================================================
+   SLIDER DOTS
+========================================================= */
+
+.slider-dots {
+    position: absolute;
+
+    bottom: -28px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    display: flex;
+
+    gap: 8px;
+
+    z-index: 5;
+}
+
+
+.dot-btn {
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background:
+        rgba(255,255,255,0.35);
+
+    cursor: pointer;
+
+    padding: 0;
+}
+
+
+.dot-btn.active {
+    width: 25px;
+
+    border-radius: 8px;
+
+    background: #FFDD53;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1024px) {
+
+    .faah-hero-section {
+        padding: 48px 36px;
+    }
+
+    .hero-headline {
+        font-size: 42px;
+    }
+
+    .food-stage {
+        width: 330px;
+        height: 330px;
+    }
+
+    .food-image-frame {
+        width: 290px;
+        height: 290px;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .faah-hero-section {
+        width: 92%;
+
+        padding:
+            40px 24px 50px;
+
+        border-radius: 18px;
+    }
+
+    .hero-container {
+        flex-direction: column;
+
+        text-align: center;
+
+        gap: 40px;
+    }
+
+    .hero-content {
+        max-width: 100%;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+    .hero-headline {
+        font-size: 34px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+    }
+
+    .hero-action-group {
+        justify-content: center;
+    }
+
+    .hero-trust-indicators {
+        justify-content: center;
+
+        gap: 16px;
+    }
+
+    .food-stage {
+        width: 280px;
+        height: 280px;
+    }
+
+    .food-image-frame {
+        width: 250px;
+        height: 250px;
+    }
+
+}
+/* =========================================================
+   PART 3 — CUISINE / CATEGORY SECTION
+========================================================= */
+
+.cuisine-section {
+    width: 100%;
+
+    background:
+        linear-gradient(
+            180deg,
+            #FFFFFF 0%,
+            #F7F9FF 100%
+        );
+
+    padding: 50px 20px;
+
+    box-sizing: border-box;
+
+    font-family:
+        'Plus Jakarta Sans',
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+}
+
+.cuisine-container {
+    max-width: 1240px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.cuisine-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    margin-bottom: 32px;
+
+    gap: 16px;
+}
+
+.cuisine-header-titles {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.cuisine-eyebrow {
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+
+    color: #1124AD;
+
+    margin: 0;
+}
+
+.cuisine-heading {
+    font-size: 26px;
+
+    font-weight: 700;
+
+    color: #1F2937;
+
+    margin: 0;
+
+    line-height: 1.25;
+}
+
+.cuisine-view-all {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #1124AD;
+
+    text-decoration: none;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    transition:
+        all 0.25s ease;
+
+    white-space: nowrap;
+}
+
+.cuisine-view-all:hover {
+    color: #0E1B78;
+
+    background: #EBF0FF;
+
+    transform: translateX(2px);
+}
+
+
+/* =========================
+   CATEGORY LIST
+========================= */
+
+.category-list {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 16px;
+
+    padding:
+        8px 4px 16px;
+
+    list-style: none;
+
+    margin: 0;
+
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        #CBD5E1 transparent;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.category-list::-webkit-scrollbar {
+    height: 4px;
+}
+
+.category-list::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+
+    border-radius: 4px;
+}
+
+
+/* =========================
+   CATEGORY ITEM
+========================= */
+
+.category-item {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    text-decoration: none;
+
+    background: transparent;
+
+    border: none;
+
+    padding: 4px;
+
+    cursor: pointer;
+
+    flex: 1 1 0;
+
+    min-width: 82px;
+
+    max-width: 110px;
+
+    text-align: center;
+
+    transition:
+        transform 0.25s
+        cubic-bezier(0.2, 0.8, 0.4, 1);
+
+    outline: none;
+}
+
+
+/* =========================
+   CATEGORY IMAGE
+========================= */
+
+.category-img-wrap {
+    width: 82px;
+
+    height: 82px;
+
+    border-radius: 50%;
+
+    background: #FFFFFF;
+
+    border:
+        2px solid #E5E7EB;
+
+    padding: 4px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.category-img-wrap img {
+    width: 100%;
+
+    height: 100%;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition:
+        transform 0.3s
+        cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+
+/* =========================
+   CATEGORY NAME
+========================= */
+
+.category-name {
+    margin-top: 10px;
+
+    font-size: 13.5px;
+
+    font-weight: 500;
+
+    color: #1F2937;
+
+    line-height: 1.3;
+
+    transition:
+        color 0.2s ease,
+        font-weight 0.2s ease;
+
+    white-space: nowrap;
+}
+
+
+/* =========================
+   SELECTED CATEGORY
+========================= */
+
+.category-item.selected
+.category-img-wrap {
+
+    border-color: #1124AD;
+
+    box-shadow:
+        0 4px 14px
+        rgba(17, 36, 173, 0.20),
+
+        0 0 0 2px
+        rgba(17, 36, 173, 0.12);
+}
+
+.category-item.selected
+.category-name {
+
+    color: #1124AD;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   HOVER
+========================= */
+
+.category-item:hover {
+    transform: translateY(-3px);
+}
+
+.category-item:hover
+.category-img-wrap {
+
+    border-color: #1124AD;
+
+    box-shadow:
+        0 6px 16px
+        rgba(17, 36, 173, 0.15);
+}
+
+.category-item:hover
+.category-img-wrap img {
+
+    transform: scale(1.07);
+}
+
+.category-item:hover
+.category-name {
+
+    color: #1124AD;
+}
+
+.category-item:active {
+    transform: translateY(0);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+
+    .category-list {
+        gap: 12px;
+    }
+
+    .category-img-wrap {
+        width: 74px;
+
+        height: 74px;
+    }
+
+    .cuisine-heading {
+        font-size: 22px;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .cuisine-section {
+        padding: 40px 16px;
+    }
+
+    .cuisine-header {
+        margin-bottom: 22px;
+    }
+
+    .cuisine-heading {
+        font-size: 20px;
+    }
+
+    .category-list {
+        justify-content: flex-start;
+
+        gap: 16px;
+
+        padding-bottom: 12px;
+    }
+
+    .category-item {
+        flex:
+            0 0 auto;
+
+        min-width: 76px;
+    }
+
+    .category-img-wrap {
+        width: 70px;
+
+        height: 70px;
+    }
+
+    .category-name {
+        font-size: 12.5px;
+    }
+}
+
+
+
+/* =========================================================
+   PART 4 — RESTAURANT CARDS
+   ========================================================= */
+
+.faah-restaurants-section {
+    width: 100%;
+    padding: 70px 0 90px;
+    background: #f7f9ff;
+}
+
+.faah-container {
+    width: min(1180px, 92%);
+    margin: 0 auto;
+}
+
+/* =========================
+   SECTION HEADER
+   ========================= */
+
+.faah-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 32px;
+}
+
+.faah-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.faah-eyebrow {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #1124ad;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.faah-main-heading {
+    margin: 0;
+    color: #0e1b78;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.faah-supporting-text {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.faah-see-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #1124ad;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.faah-see-all-link:hover {
+    color: #0e1b78;
+}
+
+.faah-see-all-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* =========================
+   RESTAURANT GRID
+   ========================= */
+
+.faah-restaurant-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+/* =========================
+   RESTAURANT CARD
+   ========================= */
+
+.faah-restaurant-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 16px rgba(17, 36, 173, 0.05);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.faah-restaurant-card:hover {
+    transform: translateY(-6px);
+
+    border-color: rgba(17, 36, 173, 0.25);
+
+    box-shadow:
+        0 18px 40px rgba(17, 36, 173, 0.13);
+}
+
+/* =========================
+   IMAGE
+   ========================= */
+
+.faah-card-media {
+    position: relative;
+
+    width: 100%;
+    height: 220px;
+
+    overflow: hidden;
+
+    background: #e8ecf7;
+}
+
+.faah-card-img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform 0.35s ease;
+}
+
+.faah-restaurant-card:hover .faah-card-img {
+    transform: scale(1.04);
+}
+
+/* =========================
+   FAVORITE BUTTON
+   ========================= */
+
+.faah-favorite-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+
+    z-index: 5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.15);
+
+    transition:
+        transform 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.faah-favorite-btn:hover {
+    color: #1124ad;
+    transform: scale(1.08);
+
+    box-shadow:
+        0 6px 18px rgba(17, 36, 173, 0.2);
+}
+
+/* IMPORTANT: controls SVG size */
+.faah-favorite-btn svg {
+    display: block;
+
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+/* =========================
+   CARD CONTENT
+   ========================= */
+
+.faah-card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    padding: 18px 20px 20px;
+}
+
+/* =========================
+   RATING + DELIVERY
+   ========================= */
+
+.faah-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 11px;
+
+    font-size: 13px;
+}
+
+.faah-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    padding: 5px 8px;
+
+    border: 1px solid rgba(229, 161, 0, 0.2);
+    border-radius: 6px;
+
+    background: #fff9e6;
+
+    color: #925400;
+
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* IMPORTANT: controls star size */
+.faah-star-icon {
+    display: block;
+
+    width: 13px;
+    height: 13px;
+
+    flex-shrink: 0;
+
+    fill: #e5a100;
+    color: #e5a100;
+}
+
+.faah-delivery-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    color: #64748b;
+
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+/* IMPORTANT: controls clock size */
+.faah-time-icon {
+    display: block;
+
+    width: 14px;
+    height: 14px;
+
+    flex-shrink: 0;
+
+    fill: none;
+    stroke: #64748b;
+    stroke-width: 2;
+}
+
+/* =========================
+   RESTAURANT NAME
+   ========================= */
+
+.faah-restaurant-name {
+    margin: 0 0 7px;
+
+    color: #111827;
+
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* =========================
+   DESCRIPTION
+   ========================= */
+
+.faah-restaurant-desc {
+    display: -webkit-box;
+
+    margin: 0 0 18px;
+
+    min-height: 38px;
+
+    overflow: hidden;
+
+    color: #64748b;
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+/* =========================
+   VIEW MENU BUTTON
+   ========================= */
+
+.faah-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: 100%;
+
+    margin-top: auto;
+    padding: 11px 16px;
+
+    border: 1px solid rgba(17, 36, 173, 0.15);
+    border-radius: 10px;
+
+    background: rgba(17, 36, 173, 0.06);
+
+    color: #1124ad;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.faah-menu-btn svg {
+    display: block;
+
+    width: 16px;
+    height: 16px;
+
+    flex-shrink: 0;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+
+    transition: transform 0.2s ease;
+}
+
+.faah-restaurant-card:hover .faah-menu-btn {
+    background: #1124ad;
+    border-color: #1124ad;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 5px 15px rgba(17, 36, 173, 0.25);
+}
+
+.faah-restaurant-card:hover .faah-menu-btn svg {
+    transform: translateX(4px);
+}
+
+/* =========================
+   EMPTY STATE
+   ========================= */
+
+.faah-empty-state {
+    grid-column: 1 / -1;
+
+    padding: 60px 20px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+}
+
+.faah-empty-icon {
+    margin-bottom: 12px;
+
+    font-size: 42px;
+}
+
+.faah-empty-state h3 {
+    margin: 0 0 6px;
+
+    color: #0e1b78;
+
+    font-size: 20px;
+}
+
+.faah-empty-state p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1000px) {
+
+    .faah-restaurant-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+
+    .faah-restaurants-section {
+        padding: 50px 0 70px;
+    }
+
+    .faah-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .faah-main-heading {
+        font-size: 26px;
+    }
+
+    .faah-restaurant-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .faah-card-media {
+        height: 210px;
+    }
+}
+
+
+
+
+
+
+
+/* =========================================================
+   PART 5 — WHY CHOOSE FAAH!! FOOD
+   ========================================================= */
+
+.faah-why-choose-section {
+    width: 100%;
+    padding: 96px 24px;
+    position: relative;
+    background: linear-gradient(
+        180deg,
+        #f8fafd 0%,
+        #f1f5fb 100%
+    );
+}
+
+.faah-why-choose-section .faah-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* =========================
+   SECTION HEADER
+   ========================= */
+
+/* =========================
+   PART 5 SECTION HEADER
+   ========================= */
+
+.faah-why-choose-section .faah-section-header {
+    display: block;
+
+    width: 100%;
+    max-width: 680px;
+
+    margin: 0 auto 56px;
+
+    text-align: center;
+}
+
+.faah-why-choose-section .faah-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    margin-bottom: 16px;
+}
+
+.faah-why-choose-section .faah-heading {
+    display: block;
+
+    width: 100%;
+
+    margin: 0 0 16px;
+
+    color: #0f172a;
+
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+
+    text-align: center;
+
+    /* Keep the desktop heading on one line */
+    white-space: nowrap;
+}
+
+.faah-why-choose-section .faah-subheading {
+    display: block;
+
+    width: 100%;
+
+    margin: 0 auto;
+
+    color: #64748b;
+
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.6;
+
+    text-align: center;
+}
+/* =========================
+   FEATURES GRID
+   ========================= */
+
+.faah-why-choose-section .faah-features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+/* =========================
+   FEATURE CARD
+   ========================= */
+
+.faah-why-choose-section .faah-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    padding: 32px 26px;
+
+    background: #ffffff;
+
+    border: 1px solid #e6ecf5;
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 18px rgba(17, 36, 173, 0.03),
+        0 1px 3px rgba(0, 0, 0, 0.02);
+
+    transition:
+        transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+        box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+        border-color 0.28s ease;
+}
+
+.faah-why-choose-section .faah-card:hover {
+    transform: translateY(-6px);
+
+    border-color: #d2ddf0;
+
+    box-shadow:
+        0 16px 32px -8px rgba(17, 36, 173, 0.10),
+        0 4px 12px -2px rgba(17, 36, 173, 0.05);
+}
+
+/* =========================
+   ICON
+   ========================= */
+
+.faah-why-choose-section .faah-icon-box {
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 24px;
+
+    border: 1px solid rgba(17, 36, 173, 0.08);
+    border-radius: 14px;
+
+    background: #eef2fd;
+
+    color: #1124ad;
+
+    transition:
+        background-color 0.28s ease,
+        transform 0.28s ease,
+        color 0.28s ease;
+}
+
+.faah-why-choose-section .faah-card:hover .faah-icon-box {
+    background: #1124ad;
+
+    border-color: #1124ad;
+
+    color: #ffffff;
+
+    transform: scale(1.05);
+}
+
+.faah-why-choose-section .faah-icon-svg {
+    display: block;
+
+    width: 26px;
+    height: 26px;
+
+    flex-shrink: 0;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+/* =========================
+   TEXT
+   ========================= */
+
+.faah-why-choose-section .faah-card-title {
+    margin: 0 0 12px;
+
+    color: #0f172a;
+
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+}
+
+.faah-why-choose-section .faah-card-desc {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14.5px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1024px) {
+
+    .faah-why-choose-section {
+        padding: 80px 20px;
+    }
+
+    .faah-why-choose-section .faah-features-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .faah-why-choose-section .faah-heading {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .faah-why-choose-section {
+        padding: 64px 16px;
+    }
+
+    .faah-why-choose-section .faah-features-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .faah-why-choose-section .faah-heading {
+        font-size: 28px;
+    }
+
+    .faah-why-choose-section .faah-subheading {
+        font-size: 15px;
+    }
+
+    .faah-why-choose-section .faah-card {
+        padding: 24px 20px;
+    }
+}
+
+
+
+/* =========================================================
+   PART 6 — FAAH!! FOOD FOOTER
+   ========================================================= */
+
+.faah-footer {
+    width: 100%;
+
+    background: #0f172a;
+
+    color: #ffffff;
+}
+
+.faah-footer-container {
+    width: min(1180px, 92%);
+    margin: 0 auto;
+}
+
+/* =========================
+   TOP FOOTER
+   ========================= */
+
+.faah-footer-top {
+    display: grid;
+
+    grid-template-columns:
+        1.6fr
+        1fr
+        1fr
+        1fr;
+
+    gap: 60px;
+
+    padding: 58px 0 48px;
+}
+
+/* =========================
+   BRAND
+   ========================= */
+
+.faah-footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.faah-footer-logo {
+    display: inline-block;
+
+    margin-bottom: 12px;
+
+    color: #ffffff;
+
+    font-size: 22px;
+    font-weight: 800;
+
+    letter-spacing: -0.02em;
+
+    text-decoration: none;
+}
+
+.faah-footer-logo span {
+    color: #8da2ff;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+.faah-footer-tagline {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================
+   FOOTER COLUMNS
+   ========================= */
+
+.faah-footer-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.faah-footer-column h3 {
+    margin: 0 0 18px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.faah-footer-column a {
+    margin-bottom: 10px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.faah-footer-column a:hover {
+    color: #ffffff;
+
+    transform: translateX(2px);
+}
+
+/* =========================
+   SOCIAL LINKS
+   ========================= */
+
+.faah-social-links {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.faah-social-link {
+    display: flex !important;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    margin: 0 !important;
+
+    border: 1px solid rgba(148, 163, 184, 0.16);
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    color: #cbd5e1 !important;
+
+    font-size: 10px !important;
+    font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.faah-social-link:hover {
+    background: #1124ad;
+
+    border-color: #1124ad;
+
+    color: #ffffff !important;
+
+    transform: translateY(-2px) !important;
+}
+
+/* =========================
+   DIVIDER
+   ========================= */
+
+.faah-footer-divider {
+    width: 100%;
+    height: 1px;
+
+    background: rgba(148, 163, 184, 0.13);
+}
+
+/* =========================
+   BOTTOM FOOTER
+   ========================= */
+
+.faah-footer-bottom {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 24px 0;
+}
+
+.faah-made-in-india {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #cbd5e1;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.faah-made-in-india span {
+    font-size: 14px;
+}
+
+.faah-footer-bottom p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 900px) {
+
+    .faah-footer-top {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 40px 50px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .faah-footer-top {
+        grid-template-columns: 1fr;
+
+        gap: 32px;
+
+        padding: 48px 0 38px;
+    }
+
+    .faah-footer-bottom {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+
+        padding: 20px 0;
+    }
+}
+
+
+
+
+/* =========================================================
+   FAAH!! FOOD — HORIZONTAL MENU ITEMS
+   ========================================================= */
+
+.faah-menu-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================
+   MENU ITEM
+   ========================= */
+
+.faah-menu-item {
+    width: 100%;
+    min-height: 175px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 35px;
+
+    padding: 28px 0;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e8ebf2;
+
+    position: relative;
+
+    transition:
+        transform 0.25s ease,
+        padding 0.25s ease;
+}
+
+
+/* =========================
+   HOVER
+   ========================= */
+
+.faah-menu-item:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   LEFT CONTENT
+   ========================= */
+
+.faah-menu-item-content {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+/* =========================
+   ITEM NAME
+   ========================= */
+
+.faah-menu-item-name {
+    margin: 0 0 8px;
+
+    color: #1e293b;
+
+    font-size: 19px;
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+/* =========================
+   DESCRIPTION
+   ========================= */
+
+.faah-menu-item-description {
+    max-width: 680px;
+
+    margin: 0 0 14px;
+
+    color: #64748b;
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   PRICE
+   ========================= */
+
+.faah-menu-item-price {
+    margin-top: auto;
+
+    color: #1e293b;
+
+    font-size: 16px;
+    font-weight: 800;
+}
+
+
+/* =========================
+   RIGHT SIDE
+   ========================= */
+
+.faah-menu-item-action {
+    width: 170px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    position: relative;
+}
+
+
+/* =========================
+   FOOD IMAGE
+   ========================= */
+
+.faah-menu-item-image {
+    width: 156px;
+    height: 135px;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 14px;
+
+    background: #f1f3f7;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.08);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+
+/* Image hover */
+
+.faah-menu-item:hover .faah-menu-item-image {
+    transform: scale(1.035);
+
+    box-shadow:
+        0 9px 25px rgba(17, 36, 173, 0.14);
+}
+
+
+/* =========================
+   ADD BUTTON
+   ========================= */
+
+.faah-menu-add-btn {
+    position: relative;
+
+    margin-top: -18px;
+
+    min-width: 112px;
+    height: 40px;
+
+    padding: 0 22px;
+
+    border: 1px solid #dfe3eb;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #1124ad;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px rgba(15, 23, 42, 0.10);
+
+    z-index: 2;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Add hover */
+
+.faah-menu-add-btn:hover {
+    background: #1124ad;
+
+    border-color: #1124ad;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(17, 36, 173, 0.22);
+}
+
+
+/* =========================
+   UNAVAILABLE BUTTON
+   ========================= */
+
+.faah-menu-add-btn.unavailable {
+    background: #f1f3f5;
+
+    border-color: #e2e5e9;
+
+    color: #8a929d;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+}
+
+.faah-menu-add-btn.unavailable:hover {
+    background: #f1f3f5;
+
+    border-color: #e2e5e9;
+
+    color: #8a929d;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 700px) {
+
+    .faah-menu-item {
+        gap: 20px;
+
+        padding: 24px 0;
+    }
+
+    .faah-menu-item-action {
+        width: 135px;
+    }
+
+    .faah-menu-item-image {
+        width: 125px;
+        height: 112px;
+    }
+
+    .faah-menu-add-btn {
+        min-width: 95px;
+        height: 37px;
+
+        font-size: 12px;
+    }
+
+    .faah-menu-item-name {
+        font-size: 17px;
+    }
+
+    .faah-menu-item-description {
+        font-size: 12px;
+    }
+
+    .faah-menu-item-price {
+        font-size: 15px;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .faah-menu-item {
+        gap: 12px;
+
+        padding: 22px 0;
+    }
+
+    .faah-menu-item-action {
+        width: 115px;
+    }
+
+    .faah-menu-item-image {
+        width: 110px;
+        height: 100px;
+
+        border-radius: 12px;
+    }
+
+    .faah-menu-add-btn {
+        min-width: 88px;
+
+        padding: 0 14px;
+
+        height: 36px;
+    }
+
+    .faah-menu-item-name {
+        font-size: 15px;
+    }
+
+    .faah-menu-item-description {
+        font-size: 11px;
+
+        line-height: 1.5;
+
+        margin-bottom: 10px;
+    }
+
+    .faah-menu-item-price {
+        font-size: 14px;
+    }
+}

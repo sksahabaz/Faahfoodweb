@@ -1,0 +1,68 @@
+# ==============================
+# Eclipse workspace files
+# ==============================
+
+.metadata/
+Servers/
+
+# Eclipse generated settings that are workspace-specific
+*.log
+
+
+# ==============================
+# Java compiled files
+# ==============================
+
+*.class
+
+bin/
+build/
+out/
+
+
+# ==============================
+# Tomcat generated files
+# ==============================
+
+work/
+temp/
+
+
+# ==============================
+# Operating system files
+# ==============================
+
+.DS_Store
+Thumbs.db
+
+
+# ==============================
+# IDE temporary files
+# ==============================
+
+*.tmp
+*.bak
+*.swp
+
+
+# ==============================
+# Logs
+# ==============================
+
+*.log
+
+
+# ==============================
+# Local environment/config files
+# ==============================
+
+.env
+.env.*
+
+
+# ==============================
+# Eclipse machine-specific configuration
+# ==============================
+
+.classpath
+.settings/
