@@ -609,39 +609,7 @@ The deployed application has been tested through the main user flow:
 
 ---
 
-## 📸 Screenshots
 
-### Home
-
-Add the project homepage screenshot here.
-
-### Restaurants
-
-Add the restaurants page screenshot here.
-
-### Menu
-
-Add the menu page screenshot here.
-
-### Cart
-
-Add the cart screenshot here.
-
-### Checkout
-
-Add the checkout screenshot here.
-
-### Order Confirmation
-
-Add the order confirmation screenshot here.
-
-### Authentication
-
-Add login/signup screenshots here.
-
-> Recommended repository path:
->
-> `docs/screenshots/`
 
 ---
 
