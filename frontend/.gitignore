@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Draco decoder, copied from three.js by scripts/copy-draco.mjs
+public/draco

@@ -17,11 +17,12 @@ import jakarta.servlet.http.HttpSession;
  * Base class for every /api servlet.
  *
  * - Every response is JSON, including errors.
- * - Write requests (POST/PUT/DELETE) must send Content-Type: application/json.
+ * - Write requests (POST/PUT/DELETE) must send Content-Type: application/json
+ *   (see acceptsBody: the profile picture upload sends the image itself).
  *   Browsers cannot send that header cross-site without a CORS preflight,
  *   and we never allow CORS, so this protects the session cookie from CSRF.
- * - Uses the same session attributes ("user", "cart", "checkout*")
- *   as the JSP controllers, so both UIs share one login and one cart.
+ * - Login and cart live in the Tomcat session ("user", "cart", "checkout*"), also read
+ *   by the page controllers (e.g. CheckoutController sends guests to /login).
  */
 public abstract class ApiServlet extends HttpServlet {
 
@@ -34,7 +35,7 @@ public abstract class ApiServlet extends HttpServlet {
         String method = request.getMethod();
         boolean isWrite = !"GET".equals(method) && !"HEAD".equals(method) && !"OPTIONS".equals(method);
 
-        if (isWrite && !isJsonRequest(request)) {
+        if (isWrite && !acceptsBody(request)) {
             error(response, HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
                     "Requests must use Content-Type: application/json.");
             return;
@@ -51,7 +52,16 @@ public abstract class ApiServlet extends HttpServlet {
         }
     }
 
-    private boolean isJsonRequest(HttpServletRequest request) {
+    /**
+     * Which write requests this servlet accepts: JSON only, unless a servlet widens it (the
+     * profile picture upload also takes image/jpeg, image/png and image/webp, which likewise
+     * cannot be sent cross-site without a CORS preflight).
+     */
+    protected boolean acceptsBody(HttpServletRequest request) {
+        return isJsonRequest(request);
+    }
+
+    protected boolean isJsonRequest(HttpServletRequest request) {
         String contentType = request.getContentType();
         return contentType != null && contentType.toLowerCase().startsWith("application/json");
     }

@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   // Where the Java backend runs during development (Tomcat from Eclipse).
@@ -19,6 +19,9 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
+    // Relative asset URLs in the build: the same dist works at Tomcat's ROOT context ("/")
+    // and under a context path ("/Faahfoodweb/"). Runtime URLs come from src/lib/paths.js.
+    base: command === 'build' ? './' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
@@ -29,6 +32,10 @@ export default defineConfig(({ mode }) => {
         '/api': toBackend,
         '/images': toBackend,
       },
+    },
+    build: {
+      // three.js + React Three Fiber are one large chunk, loaded lazily by the homepage.
+      chunkSizeWarningLimit: 1600,
     },
   }
 })

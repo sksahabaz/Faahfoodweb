@@ -1,0 +1,26 @@
+/* Corner ribbons (components/decor/CornerRibbons.jsx). */
+
+.corner-ribbons {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.corner-ribbons svg {
+  position: absolute;
+  height: auto;
+}
+
+.corner-ribbon-top {
+  top: 0;
+  left: 0;
+  width: clamp(260px, 30vw, 520px);
+}
+
+.corner-ribbon-bottom {
+  right: 0;
+  bottom: 0;
+  width: clamp(320px, 42vw, 760px);
+}

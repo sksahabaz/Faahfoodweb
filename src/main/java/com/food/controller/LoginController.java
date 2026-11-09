@@ -1,10 +1,6 @@
 package com.food.controller;
-import at.favre.lib.crypto.bcrypt.BCrypt;
-import java.io.IOException;
 
-import com.food.dao.UserDAO;
-import com.food.daoimpl.UserDAOImpl;
-import com.food.model.User;
+import java.io.IOException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,171 +9,53 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * GET /login  the React login page. It signs in with POST /api/auth/login (AuthApi →
+ *             AuthService: the account is looked up by email and the password is checked
+ *             against its BCrypt hash; on success the session gets a new id and the user).
+ *
+ * Where to go after logging in: pages that need a login (checkout, order confirmation,
+ * My Orders, profile) store their URL in the session under REDIRECT_AFTER_LOGIN before
+ * sending a guest here; the login API hands it back (takeRedirectTarget), else "/".
+ *
+ * POST /login was the form handler of the old login.jsp (removed; kept in the legacy
+ * backup). Login now only goes through the JSON API, which cannot be called from another
+ * site's form; a form POST here just shows the login page.
+ */
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
 
-    private UserDAO userDAO = new UserDAOImpl();
+    private static final long serialVersionUID = 1L;
 
-    /* =========================================================
-       GET /login
-
-       Opens the login page.
-       ========================================================= */
+    /** Session key: where to go after a successful login (e.g. "/checkout"). */
+    public static final String REDIRECT_AFTER_LOGIN = "redirectAfterLogin";
 
     @Override
-    protected void doGet(HttpServletRequest request,
-                          HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        request.getRequestDispatcher(
-                "/login.jsp"
-        ).forward(request, response);
+        ReactPages.serve(getServletContext(), request, response);
     }
 
-
-    /* =========================================================
-       POST /login
-
-       Receives email and password,
-       verifies the user,
-       and creates the login session.
-       ========================================================= */
-
     @Override
-    protected void doPost(HttpServletRequest request,
-                           HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ReactPages.redirect(request, response, "/login");
+    }
 
-        /* =====================================================
-           GET FORM DATA
-           ===================================================== */
+    /** The remembered destination without clearing it (null if none or not a safe path). */
+    public static String peekRedirectTarget(HttpSession session) {
+        Object target = session == null ? null : session.getAttribute(REDIRECT_AFTER_LOGIN);
+        return target instanceof String path && isInternalPath(path) ? path : null;
+    }
 
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+    /** Reads and clears the remembered destination. Only paths inside this application are accepted. */
+    public static String takeRedirectTarget(HttpSession session) {
+        String target = peekRedirectTarget(session);
+        session.removeAttribute(REDIRECT_AFTER_LOGIN);
+        return target == null ? "/" : target;
+    }
 
-
-        /* =====================================================
-           CLEAN INPUT
-           ===================================================== */
-
-        if (email != null) {
-            email = email.trim();
-        }
-
-        if (password != null) {
-            password = password.trim();
-        }
-
-
-        /* =====================================================
-           BASIC VALIDATION
-           ===================================================== */
-
-        if (email == null || email.isEmpty()
-                || password == null || password.isEmpty()) {
-
-            request.setAttribute(
-                    "errorMessage",
-                    "Please enter your email and password."
-            );
-
-            request.setAttribute(
-                    "email",
-                    email
-            );
-
-            request.getRequestDispatcher(
-                    "/login.jsp"
-            ).forward(request, response);
-
-            return;
-        }
-
-
-        /* =====================================================
-           FIND USER BY EMAIL
-           ===================================================== */
-
-        User user = userDAO.getUserByEmail(email);
-
-
-        /* =====================================================
-           USER DOES NOT EXIST
-           ===================================================== */
-
-        if (user == null) {
-
-            request.setAttribute(
-                    "errorMessage",
-                    "Invalid email or password."
-            );
-
-            request.setAttribute(
-                    "email",
-                    email
-            );
-
-            request.getRequestDispatcher(
-                    "/login.jsp"
-            ).forward(request, response);
-
-            return;
-        }
-
-
-        /* =====================================================
-           CHECK PASSWORD
-           ===================================================== */
-
-        boolean passwordValid =
-                BCrypt.verifyer().verify(
-                        password.toCharArray(),
-                        user.getPassword()
-                ).verified;
-
-        if (!passwordValid) {
-
-            request.setAttribute(
-                    "errorMessage",
-                    "Invalid email or password."
-            );
-
-            request.setAttribute(
-                    "email",
-                    email
-            );
-
-            request.getRequestDispatcher(
-                    "/login.jsp"
-            ).forward(request, response);
-
-            return;
-        }
-
-
-        /* =====================================================
-           LOGIN SUCCESSFUL
-           ===================================================== */
-
-        HttpSession session = request.getSession();
-
-        session.setAttribute(
-                "user",
-                user
-        );
-
-
-        /* =====================================================
-           REDIRECT TO CHECKOUT
-
-           The user originally came here because checkout
-           required authentication.
-
-           So after successful login, continue to checkout.
-           ===================================================== */
-
-        response.sendRedirect(
-                request.getContextPath() + "/checkout"
-        );
+    private static boolean isInternalPath(String path) {
+        return path.startsWith("/") && !path.startsWith("//") && !path.contains("\\");
     }
 }

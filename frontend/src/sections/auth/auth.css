@@ -1,0 +1,624 @@
+/* =============================================================
+   FAah!! FOOD - shared styles for the login and signup pages
+   (LoginPage.jsx, SignupPage.jsx): palette, logo, card text, fields,
+   buttons, social buttons and the "Coming soon" hint.
+
+   Ported unchanged from the approved JSP pages (css/auth.css). Same
+   palette and logo as the rest of the app (cream / peach / espresso /
+   orange, Kaushan Script + Poppins). Page layouts live in login.css
+   and signup.css. Everything is scoped under .auth-page.
+   ============================================================= */
+
+/* The approved design uses Poppins 400 for body text. The rest of the app
+   only bundles 500-800, so these pages get their own copy of the family
+   (same font files) rather than changing every other page's text. */
+@font-face { font-family: 'Poppins Auth'; font-style: normal; font-display: swap; font-weight: 400; src: url('../../../node_modules/@fontsource/poppins/files/poppins-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins Auth'; font-style: normal; font-display: swap; font-weight: 500; src: url('../../../node_modules/@fontsource/poppins/files/poppins-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins Auth'; font-style: normal; font-display: swap; font-weight: 600; src: url('../../../node_modules/@fontsource/poppins/files/poppins-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins Auth'; font-style: normal; font-display: swap; font-weight: 700; src: url('../../../node_modules/@fontsource/poppins/files/poppins-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins Auth'; font-style: normal; font-display: swap; font-weight: 800; src: url('../../../node_modules/@fontsource/poppins/files/poppins-latin-800-normal.woff2') format('woff2'); }
+
+/* Same resets as the original pages, limited to these pages. :where() adds no specificity,
+   so they stay as weak as the original element selectors (class rules still win). */
+:where(.auth-page) *,
+:where(.auth-page) *::before,
+:where(.auth-page) *::after {
+    box-sizing: border-box;
+}
+
+:where(.auth-page) :is(h1, h2, p, ul) {
+    margin: 0;
+    padding: 0;
+}
+
+.auth-page {
+    --u: 0.74px;
+
+    --cream: #fdf1e6;
+    --peach: #f8dcc6;
+    --espresso: #3b1d10;
+    --espresso-soft: #6f5d53;
+    --orange: #f26a1b;
+    --orange-deep: #c8401c;
+    --line: #f0d8c6;
+    --icon: #a13d18;
+
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    font-family: 'Poppins Auth', 'Poppins', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+    color: var(--espresso);
+    background:
+        radial-gradient(60% 55% at 72% 45%, rgb(255 250 245 / 0.75), transparent 70%),
+        linear-gradient(118deg, #fdf2e8 0%, #fbe7d7 42%, #f9dcc5 100%);
+    -webkit-font-smoothing: antialiased;
+}
+
+.auth-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* ---------- Background --------------------------------------- */
+
+.auth-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.auth-waves {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.auth-decor {
+    position: absolute;
+    user-select: none;
+}
+
+
+/* ---------- Logo (same as the site navbar logo) -------------- */
+
+.auth-logo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+    line-height: 1;
+    text-decoration: none;
+    border-radius: 12px;
+}
+
+.auth-logo:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 6px;
+}
+
+.auth-logo-script {
+    font-family: 'Kaushan Script', cursive;
+    font-size: 46px;
+    color: var(--orange-deep);
+    transform: rotate(-6deg);
+    text-shadow: 2px 2px 0 #7a2208;
+}
+
+.auth-logo-food {
+    margin-top: 2px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #d9541e;
+}
+
+.auth-logo--compact {
+    display: flex;
+    margin: 0 auto 18px;
+}
+
+.auth-logo--compact .auth-logo-script {
+    font-size: 38px;
+}
+
+.auth-logo--compact .auth-logo-food {
+    font-size: 18px;
+}
+
+
+/* ---------- Spark doodles ------------------------------------ */
+
+.auth-spark {
+    position: absolute;
+    fill: none;
+    stroke: #f07a22;
+    stroke-width: 6;
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+
+/* ---------- Card, fields and buttons ------------------------- */
+
+.auth-card {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    margin: auto 0;
+    padding: 30px 22px 28px;
+    border: 1px solid rgb(255 255 255 / 0.75);
+    border-radius: 30px;
+    background: rgb(255 249 244 / 0.86);
+    box-shadow:
+        0 30px 60px -28px rgb(176 84 30 / 0.35),
+        0 2px 6px rgb(176 84 30 / 0.06);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.auth-spark--title {
+    top: -16px;
+    right: -34px;
+    width: 34px;
+    height: 34px;
+}
+
+.auth-title {
+    position: relative;
+    display: inline-block;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--espresso);
+}
+
+.auth-subtitle {
+    margin-top: 8px;
+    font-size: 15px;
+    color: var(--espresso-soft);
+}
+
+.auth-error {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 12px 14px;
+    border: 1px solid #f4c3b2;
+    border-radius: 14px;
+    background: #fff0ea;
+    color: #b3261e;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.auth-notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 12px 14px;
+    border: 1px solid #cfe0b4;
+    border-radius: 14px;
+    background: #f3f8e9;
+    color: #3f5a1d;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.auth-notice svg,
+.auth-error svg {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+    text-align: left;
+}
+
+.auth-field {
+    position: relative;
+}
+
+.auth-field-icon {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    width: 22px;
+    height: 22px;
+    transform: translateY(-50%);
+    fill: none;
+    stroke: var(--icon);
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.auth-field input,
+.auth-field textarea {
+    display: block;
+    width: 100%;
+    height: 54px;
+    padding: 0 18px 0 54px;
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    background: rgb(255 252 249 / 0.92);
+    color: var(--espresso);
+    font: inherit;
+    font-size: 16px;
+    transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.auth-field input[type='password'],
+.auth-field input#password,
+.auth-field:has(.auth-reveal) input {
+    padding-right: 56px;
+}
+
+/* Multi-line field (signup address): icon at the first line, not the middle. */
+.auth-field textarea {
+    height: auto;
+    min-height: 54px;
+    padding-top: 14px;
+    padding-bottom: 12px;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.auth-field--area .auth-field-icon {
+    top: 16px;
+    transform: none;
+}
+
+.auth-field input::placeholder,
+.auth-field textarea::placeholder {
+    color: #8a776c;
+    opacity: 1;
+}
+
+.auth-field input:hover,
+.auth-field textarea:hover {
+    border-color: #ebc3a6;
+}
+
+.auth-field input:focus,
+.auth-field textarea:focus {
+    outline: none;
+    border-color: var(--orange);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgb(242 106 27 / 0.16);
+}
+
+.auth-field [aria-invalid='true'] {
+    border-color: #e0573a;
+    background: #fffaf8;
+}
+
+.auth-field [aria-invalid='true']:focus {
+    border-color: #d8432a;
+    box-shadow: 0 0 0 4px rgb(216 67 42 / 0.16);
+}
+
+/* Message under a field (placed right after its .auth-field). */
+.auth-field-error {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: -6px 0 0 6px;
+    color: #b3261e;
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.auth-field-error::before {
+    content: '!';
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #d8432a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.auth-field-error[hidden] {
+    display: none;
+}
+
+.auth-reveal {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: none;
+    color: #5b4a42;
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.auth-reveal:hover {
+    color: var(--orange-deep);
+}
+
+.auth-reveal:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: -2px;
+}
+
+.auth-reveal svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.auth-reveal .icon-shown,
+.auth-reveal[aria-pressed='true'] .icon-hidden {
+    display: none;
+}
+
+.auth-reveal[aria-pressed='true'] .icon-shown {
+    display: block;
+}
+
+.auth-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-top: 2px;
+}
+
+.auth-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--espresso);
+    cursor: pointer;
+}
+
+.auth-check input {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    border: 2px solid #3b2a22;
+    border-radius: 5px;
+    background: #fff;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.auth-check input:checked {
+    border-color: var(--orange);
+    background: var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 80% no-repeat;
+}
+
+.auth-check input:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
+}
+
+.auth-link {
+    padding: 4px 2px;
+    border: 0;
+    background: none;
+    color: #e8590c;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.auth-submit {
+    height: 56px;
+    margin-top: 8px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff7f1e 0%, #f45f17 100%);
+    box-shadow: 0 16px 30px -14px rgb(232 84 20 / 0.75), inset 0 1px 0 rgb(255 255 255 / 0.25);
+    color: #fff;
+    font: inherit;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: transform 0.15s, filter 0.15s, box-shadow 0.15s;
+}
+
+.auth-submit:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+    box-shadow: 0 20px 34px -14px rgb(232 84 20 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.25);
+}
+
+.auth-submit:active {
+    transform: translateY(0);
+}
+
+.auth-submit:focus-visible {
+    outline: 3px solid var(--espresso);
+    outline-offset: 3px;
+}
+
+.auth-submit:disabled {
+    cursor: progress;
+    filter: saturate(0.85) brightness(0.98);
+    transform: none;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+    color: #7a6a60;
+    font-size: 14px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ead6c6;
+}
+
+.auth-social {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.auth-social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 50px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.55);
+    color: var(--espresso);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.auth-social-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* Visual-only controls: they look like the design but do nothing, and say so on hover/focus. */
+.auth-soon {
+    position: relative;
+    cursor: not-allowed;
+}
+
+.auth-soon::after {
+    content: attr(data-soon);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: var(--espresso);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.auth-soon:hover::after,
+.auth-soon:focus-visible::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.auth-soon:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
+}
+
+.auth-switch {
+    margin-top: 24px;
+    font-size: 15px;
+    color: var(--espresso-soft);
+}
+
+.auth-switch a {
+    margin-left: 6px;
+    color: #e8590c;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.auth-switch a:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 3px;
+}
+
+
+@media (max-width: 380px) {
+    .auth-card {
+        padding-inline: 16px;
+    }
+
+    .auth-social-btn {
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .auth-check,
+    .auth-link {
+        font-size: 14px;
+    }
+
+    .auth-check {
+        gap: 8px;
+    }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-page *,
+    .auth-page *::after {
+        transition: none !important;
+    }
+}

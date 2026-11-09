@@ -11,6 +11,7 @@ import com.food.model.Menu;
 import com.food.model.Order;
 import com.food.model.Restaurant;
 import com.food.model.User;
+import com.food.util.AvatarStore;
 
 /**
  * Turns models into the JSON shapes the React app receives.
@@ -29,6 +30,12 @@ final class ApiViews {
         view.put("email", user.getEmail());
         view.put("phone", user.getPhone());
         view.put("address", user.getAddress());
+        // account creation time (users.created_date), shown as "Member since"
+        view.put("memberSince", user.getCreatedDate());
+        // the profile picture, if uploaded: a URL relative to the application, versioned by
+        // the file's modification time so a new picture is never served from cache
+        Long avatar = AvatarStore.version(user.getUserId());
+        view.put("avatarUrl", avatar == null ? null : "api/profile/avatar?v=" + avatar);
         return view;
     }
 

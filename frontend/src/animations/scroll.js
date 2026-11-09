@@ -14,3 +14,12 @@ export function scrollToTarget(target) {
   const element = typeof target === 'string' ? document.querySelector(target) : target
   element?.scrollIntoView({ behavior: 'smooth' })
 }
+
+/** Stops page scrolling while a drawer or dialog is open (Lenis and native). */
+export function setScrollLock(locked) {
+  if (lenis) {
+    if (locked) lenis.stop()
+    else lenis.start()
+  }
+  document.documentElement.style.overflow = locked ? 'hidden' : ''
+}

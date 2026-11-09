@@ -1,4 +1,4 @@
-import { api } from './client'
+import { api, apiUpload } from './client'
 
 // One function per backend endpoint. See src/main/java/com/food/api/.
 
@@ -34,4 +34,11 @@ export const ordersApi = {
   list: () => api('/orders'),
   get: (orderId) => api(`/orders/${orderId}`),
   place: (paymentMethod) => api('/orders', { method: 'POST', body: { paymentMethod } }),
+}
+
+// The logged-in user's own profile; every call answers { user } (same shape as /auth/me).
+export const profileApi = {
+  update: (details) => api('/profile', { method: 'PUT', body: details }),
+  uploadAvatar: (image) => apiUpload('/profile/avatar', image),
+  removeAvatar: () => api('/profile/avatar', { method: 'DELETE' }),
 }

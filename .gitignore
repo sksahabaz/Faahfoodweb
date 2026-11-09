@@ -66,3 +66,20 @@ Thumbs.db
 
 .classpath
 .settings/
+
+
+# ==============================
+# React build copied into the webapp for local Tomcat
+# (npm run build:webapp in frontend/; Docker builds its own)
+# ==============================
+
+/src/main/webapp/index.html
+/src/main/webapp/favicon.svg
+/src/main/webapp/assets/
+/src/main/webapp/models/
+/src/main/webapp/draco/
+/src/main/webapp/decor/
+/src/main/webapp/brand/
+/src/main/webapp/cuisines/
+/src/main/webapp/confirmation/
+/src/main/webapp/auth/

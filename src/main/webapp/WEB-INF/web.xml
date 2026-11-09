@@ -8,8 +8,35 @@
 
     <display-name>Faahfoodweb</display-name>
 
+    <!-- Every page URL, login and signup included, is mapped to a servlet that serves the
+         React app (see controller/ReactPages.java); "/" is HomeController. The application
+         has no JSP pages. -->
     <welcome-file-list>
-        <welcome-file>restaurant</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+
+    <!-- Login and cart live in the session. The session id travels only in its cookie
+         (never in URLs), the cookie is hidden from scripts, and sessions last 30 minutes
+         of inactivity. The cookie is marked Secure when the request came over HTTPS,
+         including through Render's proxy (see META-INF/context.xml). -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <!-- Unknown pages: the React app's "page not found" screen (status stays 404). -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/not-found</location>
+    </error-page>
+
+    <!-- 3D burger model of the React homepage (Tomcat has no default type for .glb). -->
+    <mime-mapping>
+        <extension>glb</extension>
+        <mime-type>model/gltf-binary</mime-type>
+    </mime-mapping>
 
 </web-app>

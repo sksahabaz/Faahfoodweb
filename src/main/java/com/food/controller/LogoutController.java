@@ -9,6 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * GET /logout ends the session and goes to the homepage. (The React app logs out with
+ * POST /api/auth/logout; this URL is kept for old links.)
+ */
 @WebServlet("/logout")
 public class LogoutController extends HttpServlet {
 
@@ -23,8 +27,9 @@ public class LogoutController extends HttpServlet {
     	    session.invalidate();
     	}
 
+    	// back to the homepage (the old JSP restaurant page is gone)
     	response.sendRedirect(
-    	        request.getContextPath() + "/restaurant"
+    	        request.getContextPath() + "/"
     	);
     }
 }
