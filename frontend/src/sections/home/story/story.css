@@ -1,0 +1,761 @@
+/* ==========================================================================
+   FAah!! FOOD homepage: cinematic burger story + page chrome.
+   Ported from FAah-Food-3D/website-test. Everything is scoped under .faah-home
+   (CSS nesting, compiled by Lightning CSS), so other pages are not affected.
+   Layers, back to front (root stacking context):
+     -1 .home-bg     page background
+      0 .story-back  BURGER word, glow, ground, backdrops, back ingredients, vignette
+      1 page content (cuisines, restaurants, footer)
+      2 .story-stage the transparent 3D canvas (the burger flies over the content into its tile)
+      3 .grab-zone + .story-front  drag area, foreground ingredients
+      4 .story-ui    Order Now, scroll hint, captions
+      5 .nav
+   ========================================================================== */
+
+.faah-home {
+  --cream: #f6ebdd;
+  --cream-deep: #efdcc4;
+  --espresso: #25221e;
+  --espresso-soft: #5b544b;
+  --orange: #e66b32;
+  --olive: #a7b56a;
+  --line: rgb(37 34 30 / 0.12);
+  --serif: ui-serif, 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --sans: ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+  color: var(--espresso);
+  font-family: 'Poppins', var(--sans);
+  -webkit-font-smoothing: antialiased;
+  color-scheme: only light;
+
+  /* warm peach-beige page: cream light in the middle, deeper peach towards the edges */
+  .home-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(115% 100% at 50% 46%, #f8e9d8 0%, #f4dfc9 30%, #f1d9c2 52%, #eec4a2 80%, #e5b089 100%);
+    pointer-events: none;
+  }
+
+  /* Story layer groups (fade out together when the page content takes over). */
+  .story-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .story-back { z-index: 0; }
+  .story-front { z-index: 3; }
+  .story-ui { z-index: 4; }
+
+  /* Gentle vignette: natural light fall-off towards the corners. */
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(130% 110% at 50% 45%, transparent 55%, rgb(150 76 28 / 0.14) 100%);
+  }
+
+  /* Loading bar while the burger model downloads. */
+  .story-loader {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 12px;
+    color: var(--espresso-soft);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .story-loader-bar {
+    width: 180px;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--line);
+    overflow: hidden;
+  }
+
+  .story-loader-bar span {
+    display: block;
+    height: 100%;
+    background: var(--orange);
+    transition: width 0.2s ease;
+  }
+
+  /* ---------- Background glow (soft orange light behind the burger) ---------- */
+  .glow {
+    position: fixed;
+    z-index: 0;
+    left: 50%;
+    top: 50%;
+    width: 84vmin;
+    height: 84vmin;
+    margin: -44vmin 0 0 -42vmin;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(245 163 108 / 0.55) 0%, rgb(245 163 108 / 0.28) 42%, transparent 70%);
+    filter: blur(10px);
+    pointer-events: none;
+  }
+
+  /* ---------- Giant BURGER lettering, arched like the reference ---------- */
+  .big-word {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 7vh; /* optical centre a little above the middle, like the reference */
+    font-family: 'Anton', 'Impact', sans-serif;
+    font-size: min(29vw, 51vh); /* most of the hero width, roughly half its height */
+    line-height: 1;
+    letter-spacing: -0.005em;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .big-word span {
+    display: inline-block;
+    transform-origin: 50% 100%;
+    /* deep burnt orange at the top, lighter orange towards the bottom */
+    background: linear-gradient(180deg, #8a320c 0%, #a9410f 30%, #cc5a20 62%, #e8884a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Arch: outer letters lean out and sit lower, inner letters stand tall. */
+  .big-word .l0 { transform: translateY(7%) rotate(-7deg) scale(1, 0.98); }
+  .big-word .l1 { transform: translateY(1%) rotate(-3deg) scale(1, 1.05); }
+  .big-word .l2 { transform: translateY(-2%) rotate(-1deg) scale(1, 1.09); }
+  .big-word .l3 { transform: translateY(-2%) rotate(1deg) scale(1, 1.09); }
+  .big-word .l4 { transform: translateY(1%) rotate(3deg) scale(1, 1.05); }
+  .big-word .l5 { transform: translateY(7%) rotate(7deg) scale(1, 0.98); }
+
+  /* Soft ground shadow under the floating burger (the 3D contact shadow adds the core). */
+  .ground {
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 79vh;
+    width: 44vw;
+    height: 8vh;
+    margin-left: -22vw;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(96 45 14 / 0.42), rgb(96 45 14 / 0.16) 55%, transparent);
+    filter: blur(6px);
+    pointer-events: none;
+  }
+
+  /* ---------- Floating ingredients ---------- */
+  .decor-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .decor-back {
+    z-index: 1;
+  }
+
+  .decor-front {
+    z-index: 3;
+  }
+
+  .decor {
+    position: absolute;
+  }
+
+  .decor-parallax,
+  .decor-float {
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+  }
+
+  .decor img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* cast shadow onto the background: offset down, soft, warm (never black) */
+    filter: drop-shadow(0 26px 20px rgb(110 52 16 / 0.3));
+  }
+
+  /* Desktop positions (from the reference). */
+  .decor-lettuce-ul { left: 6vw; top: 12vh; width: 17vw; transform: rotate(-16deg); }
+  .decor-tomato-ur { left: 81.5vw; top: 15vh; width: 10vw; transform: rotate(28deg); }
+  .decor-onion-ll { left: 10.5vw; top: 61vh; width: 11vw; transform: rotate(18deg); }
+  .decor-lettuce-lr { left: 81vw; top: 63vh; width: 14vw; transform: scaleX(-1) rotate(-12deg); }
+  .decor-lettuce-lr img { filter: blur(0.6px) drop-shadow(0 26px 20px rgb(110 52 16 / 0.28)); }
+
+  .decor-seed-a { left: 33vw; top: 30vh; width: 1.5vw; }
+  .decor-seed-b { left: 70vw; top: 14vh; width: 1.2vw; }
+  .decor-seed-c { left: 75vw; top: 19vh; width: 1.4vw; }
+  .decor-seed-d { left: 30vw; top: 70vh; width: 1.1vw; }
+  .decor-seed-e { left: 68vw; top: 74vh; width: 1.6vw; }
+  .decor-seed-f { left: 25vw; top: 48vh; width: 1vw; }
+  .decor-seed-g { left: 77vw; top: 51vh; width: 1vw; }
+  .decor-seed-h { left: 36vw; top: 77vh; width: 1.2vw; }
+  .decor-seed-i { left: 72vw; top: 36vh; width: 1.1vw; }
+  .decor-seed-g img,
+  .decor-seed-d img,
+  .decor-seed-i img { filter: blur(1px); } /* far away */
+
+  /* Foreground tomato: partly outside the bottom-left edge; extra blur = shallow depth of field.
+     No cast shadow (it is between the camera and the scene); a faint warm glow blends its edge. */
+  .decor-tomato-front { left: -2.6vw; bottom: -7vh; width: 15.5vw; }
+  .decor-tomato-front img { filter: blur(1.8px) drop-shadow(0 0 28px rgb(245 163 108 / 0.35)); }
+  .decor-seed-front { left: 24vw; top: 83vh; width: 2.2vw; }
+  .decor-seed-front img { filter: blur(2.5px); }
+
+  /* ---------- Exploded-burger backdrop (ribbons, doodles, floating ingredients) ---------- */
+  .xb-layer {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .xb-back { z-index: 1; }
+  .xb-front { z-index: 3; }
+
+  /* Warm light pooling where the ribbons flow; the middle stays creamy for the burger. */
+  .xb-wash {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(42% 36% at 6% 30%, rgb(246 156 84 / 0.34), transparent 72%),
+      radial-gradient(36% 30% at 10% 80%, rgb(246 156 84 / 0.3), transparent 72%),
+      radial-gradient(44% 38% at 96% 60%, rgb(246 156 84 / 0.38), transparent 72%),
+      radial-gradient(60% 26% at 50% 104%, rgb(242 150 84 / 0.34), transparent 75%),
+      radial-gradient(40% 46% at 50% 44%, rgb(255 236 212 / 0.5), transparent 76%),
+      linear-gradient(180deg, rgb(255 226 182 / 0.5), rgb(255 212 164 / 0.52)); /* lighter, warmer peach overall */
+  }
+
+  .xb-ribbons {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 18px 22px rgb(184 92 34 / 0.16));
+  }
+
+  .xb-ribbons-portrait { display: none; }
+  .xb-ribbon.tone-light { opacity: 0.85; }
+
+  .xb-item { position: absolute; }
+
+  .xb-parallax,
+  .xb-float { will-change: transform; }
+
+  .xb-item img,
+  .xb-item svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .xb-sprite img { filter: drop-shadow(0 22px 18px rgb(110 52 16 / 0.26)); }
+
+  /* Line art: warm orange ink, drawn in by the scroll timeline. */
+  .xb-doodle { color: #e3935a; opacity: 0.8; }
+  .xb-doodle [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+  /* Desktop positions (from the reference; the burger column in the middle stays clear). */
+  .xb-d-lettuce { left: 6.5vw; top: 14vh; width: 12vw; }
+  .xb-d-tomato { left: 67vw; top: 10vh; width: 8vw; }
+  .xb-d-onion { left: 86vw; top: 31vh; width: 10.5vw; }
+  .xb-d-cheese { left: 77vw; top: 68vh; width: 9.5vw; }
+  .xb-d-burst-l { left: 7vw; top: 62vh; width: 5vw; } /* below the showcase captions */
+  .xb-d-burst-r { left: 83vw; top: 16vh; width: 5vw; transform: scaleX(-1) rotate(10deg); }
+
+  .xb-s-lettuce-a { left: 22.5vw; top: 13vh; width: 7.5vw; }
+  .xb-s-lettuce-a img { transform: rotate(28deg); }
+  .xb-s-onion { left: 14vw; top: 57vh; width: 10.5vw; }
+  .xb-s-onion img { transform: rotate(38deg); }
+  .xb-s-tomato { left: 70vw; top: 22vh; width: 11vw; }
+  .xb-s-tomato img { transform: rotate(-14deg); }
+  .xb-s-lettuce-b { left: 69vw; top: 44vh; width: 10vw; }
+  .xb-s-lettuce-b img { transform: scaleX(-1) rotate(-22deg); }
+  .xb-seed { width: 1.55vw; }
+  .xb-seed img { transform: rotate(var(--spin)); filter: drop-shadow(0 6px 5px rgb(110 52 16 / 0.22)); }
+
+  /* Foreground: out of focus, close to the lens. */
+  .xb-s-tomato-blur { left: -3vw; bottom: -6vh; width: 14.5vw; }
+  .xb-s-tomato-blur img { filter: blur(3px) drop-shadow(0 0 26px rgb(245 163 108 / 0.32)); }
+  .xb-s-lettuce-blur { left: 84vw; top: 78vh; width: 15vw; }
+  .xb-s-lettuce-blur img { filter: blur(3px); transform: scaleX(-1) rotate(-34deg); }
+
+  @media (max-aspect-ratio: 9/10) {
+    .xb-ribbons-landscape { display: none; }
+    .xb-ribbons-portrait { display: block; }
+  }
+
+  /* ---------- 3D stage ---------- */
+  .story-stage {
+    position: fixed;
+    inset: 0;
+    height: 100lvh; /* no jump when mobile toolbars slide */
+    z-index: 2;
+    pointer-events: none; /* wheel / touch always scroll the page */
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav {
+    position: fixed;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 18px 5.5vw 0;
+  }
+
+  .logo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .logo-script {
+    font-family: 'Kaushan Script', cursive;
+    font-size: 46px;
+    color: #c8401c;
+    transform: rotate(-6deg);
+    text-shadow: 2px 2px 0 #7a2208;
+  }
+
+  .logo-food {
+    margin-top: 2px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #d9541e;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: clamp(28px, 4vw, 70px);
+  }
+
+  .nav-links a {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--espresso);
+    text-decoration: none;
+  }
+
+  .nav-links a:hover {
+    color: var(--orange);
+  }
+
+  /* the page being shown (My Orders) */
+  .nav-links a[aria-current='page'] {
+    margin: -8px -16px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgb(248 190 150 / 0.45);
+    color: #d4501a;
+  }
+
+  .nav-actions {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .icon-button {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    background: none;
+    color: var(--espresso);
+    cursor: pointer;
+  }
+
+  .icon-button svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    display: grid;
+    place-items: center;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #d9541e;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* the cart count changed (the element is re-created with the new number) */
+  .badge-pop {
+    animation: badge-pop 0.32s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .badge-pop { animation: none; }
+  }
+
+  .login {
+    padding: 11px 32px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #e8642a, #cf4e18);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgb(207 78 24 / 0.3);
+  }
+
+  .nav a:focus-visible,
+  .icon-button:focus-visible,
+  .order-pill:focus-visible {
+    outline: 2px solid var(--espresso);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Drag-to-rotate area over the burger ---------- */
+  /* Above the canvas, below the buttons. touch-action: none so a finger drag rotates
+     the burger instead of scrolling; outside this area the page scrolls as usual. */
+  .grab-zone {
+    position: fixed;
+    z-index: 3;
+    left: 50%;
+    top: 17vh;
+    width: 36vw;
+    height: 64vh;
+    margin-left: -18vw;
+    border-radius: 40%;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .grab-zone.dragging {
+    cursor: grabbing;
+  }
+
+  /* ---------- Order Now + scroll prompt ---------- */
+  .hero-cta {
+    position: fixed;
+    z-index: 4;
+    pointer-events: none;
+    left: 0;
+    right: 0;
+    bottom: 7.5vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  .order-pill {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 38px;
+    padding: 8px 8px 8px 46px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ec6a2e 0%, #d4501a 100%);
+    color: #fff;
+    font-size: clamp(18px, 1.45vw, 24px);
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 14px 30px rgb(207 78 24 / 0.32);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .order-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 36px rgb(207 78 24 / 0.38);
+  }
+
+  .order-arrow {
+    display: grid;
+    place-items: center;
+    width: 2.2em;
+    height: 2.2em;
+    border-radius: 50%;
+    background: #fff;
+    color: #2b1a10;
+  }
+
+  .order-arrow svg {
+    width: 55%;
+  }
+
+  .scroll-hint {
+    position: fixed;
+    z-index: 4;
+    left: 0;
+    right: 0;
+    bottom: 1.4vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: #6b4a33;
+  }
+
+  .scroll-hint svg {
+    width: 22px;
+    height: 22px;
+    color: #5a3a22;
+    animation: nudge 1.8s ease-in-out infinite;
+  }
+
+
+  /* ---------- Showcase captions ---------- */
+  .caption {
+    position: fixed;
+    z-index: 4;
+    left: 6vw;
+    top: 44vh;
+    max-width: 20vw;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(28px, 3.4vw, 52px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--espresso);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .caption small {
+    display: block;
+    margin-bottom: 12px;
+    font-family: 'Poppins', var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--olive);
+  }
+
+
+  /* Scroll track: six screens. */
+  .story-track > div {
+    height: 100vh;
+  }
+
+  /* ---------- Tablet ---------- */
+  @media (max-width: 1100px) {
+    .nav-links { gap: 26px; }
+    .nav-links a { font-size: 15px; }
+    .login { padding: 9px 22px; font-size: 16px; }
+    .decor-lettuce-ul { width: 20vw; }
+    .decor-tomato-ur { width: 12vw; }
+    .decor-onion-ll { width: 13vw; }
+  }
+
+  /* ---------- Mobile: burger first, fewer ingredients, simpler chrome ---------- */
+  @media (max-width: 700px) {
+    .nav { grid-template-columns: auto 1fr; padding: 14px 18px 0; }
+    .nav-links, .nav-actions .icon-button:first-child { display: none; }
+    .logo-script { font-size: 32px; }
+    .logo-food { font-size: 15px; }
+    .nav-actions { gap: 14px; }
+    .login { padding: 8px 18px; font-size: 15px; }
+
+    .big-word { font-size: 27vw; padding-bottom: 6vh; }
+    .ground { top: 74vh; width: 80vw; margin-left: -40vw; }
+
+    .decor-lettuce-ul { left: -6vw; top: 24vh; width: 34vw; }
+    .decor-tomato-ur { left: 76vw; top: 25vh; width: 22vw; }
+    .decor-onion-ll { left: 2vw; top: 66vh; width: 22vw; }
+    .decor-lettuce-lr,
+    .decor-seed-b, .decor-seed-d, .decor-seed-g, .decor-seed-h, .decor-seed-i { display: none; }
+    .decor-seed-a { left: 14vw; top: 42vh; width: 3vw; }
+    .decor-seed-c { left: 82vw; top: 46vh; width: 3vw; }
+    .decor-seed-e { left: 76vw; top: 70vh; width: 3.4vw; }
+    .decor-seed-f { left: 8vw; top: 58vh; width: 2.6vw; }
+    .decor-tomato-front { left: -8vw; bottom: -5vh; width: 30vw; }
+    .decor-seed-front { left: 70vw; top: 86vh; width: 5vw; }
+
+    .xb-d-lettuce { left: 2vw; top: 11vh; width: 26vw; }
+    .xb-d-tomato { left: 76vw; top: 10vh; width: 17vw; }
+    .xb-d-cheese { left: 74vw; top: 79vh; width: 20vw; }
+    .xb-d-burst-l { left: 3vw; top: 46vh; width: 10vw; }
+    .xb-d-onion, .xb-d-burst-r { display: none; }
+    .xb-s-lettuce-a { left: 1vw; top: 26vh; width: 17vw; }
+    .xb-s-onion { left: 2vw; top: 58vh; width: 17vw; }
+    .xb-s-tomato { left: 79vw; top: 27vh; width: 21vw; }
+    .xb-s-lettuce-b { left: 80vw; top: 56vh; width: 19vw; }
+    .xb-seed { display: none; }
+    .xb-seed.xb-s-seed-2, .xb-seed.xb-s-seed-9, .xb-seed.xb-s-seed-13 { display: block; width: 3vw; }
+    .xb-seed.xb-s-seed-2 { left: 8vw !important; top: 40vh !important; }
+    .xb-seed.xb-s-seed-9 { left: 88vw !important; top: 44vh !important; }
+    .xb-seed.xb-s-seed-13 { left: 12vw !important; top: 72vh !important; }
+    .xb-s-tomato-blur { left: -8vw; bottom: -5vh; width: 28vw; }
+    .xb-s-lettuce-blur { left: 72vw; top: 84vh; width: 32vw; }
+
+    .grab-zone { top: 25vh; width: 84vw; height: 46vh; margin-left: -42vw; }
+    .order-pill { gap: 24px; padding-left: 30px; }
+    .hero-cta { bottom: 11vh; }
+    .scroll-hint { font-size: 11px; letter-spacing: 0.4em; }
+
+    .caption {
+      left: 16px;
+      top: auto;
+      bottom: 14vh;
+      max-width: none;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgb(246 235 221 / 0.88);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-hint svg { animation: none; }
+    .order-pill { transition: none; }
+  }
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+/* ---------- Navigation: solid over page content, account menu ---------- */
+.faah-home {
+  /* Narrow tablets (701-900 px): keep the links on one line beside the logo. */
+  @media (min-width: 701px) and (max-width: 900px) {
+    .nav { padding-inline: 3.5vw; }
+    .nav-links { gap: 18px; }
+    .nav-links a { font-size: 14px; white-space: nowrap; }
+    .nav-actions { gap: 14px; }
+    .logo-script { font-size: 38px; }
+  }
+
+  .nav {
+    padding-bottom: 12px;
+    transition: background-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+  }
+
+  .nav-solid {
+    background: rgb(246 235 221 / 0.88);
+    box-shadow: 0 10px 30px -22px rgb(110 52 16 / 0.6);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav a.cart {
+    color: var(--espresso);
+  }
+
+  .account {
+    position: relative;
+  }
+
+  .account-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 210px;
+    padding: 5px 16px 5px 5px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.75);
+    box-shadow: 0 6px 16px rgb(110 52 16 / 0.14);
+    color: var(--espresso);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .account-avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    overflow: hidden; /* the profile picture, when there is one */
+    border-radius: 50%;
+    background: linear-gradient(180deg, #e8642a, #cf4e18);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .account-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .account-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    display: grid;
+    min-width: 200px;
+    padding: 8px;
+    border-radius: 18px;
+    background: #fffaf3;
+    box-shadow: 0 24px 50px -20px rgb(110 52 16 / 0.45);
+  }
+
+  .account-menu a,
+  .account-menu button {
+    padding: 10px 14px;
+    border-radius: 12px;
+    color: var(--espresso);
+    font-size: 15px;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .account-menu a:hover,
+  .account-menu button:hover {
+    background: rgb(230 107 50 / 0.1);
+  }
+
+  .account-email {
+    margin: 4px 14px 6px;
+    color: var(--espresso-soft);
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .account-pill:focus-visible,
+  .account-menu a:focus-visible,
+  .account-menu button:focus-visible,
+  .login:focus-visible {
+    outline: 2px solid var(--espresso);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 700px) {
+    .account-pill { padding: 3px; }
+    .account-name { display: none; }
+  }
+}

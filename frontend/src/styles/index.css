@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+/* FAah!! FOOD design tokens (warm cream / peach / espresso / orange), shared by
+   Tailwind utilities (bg-cream, text-espresso, font-display, ...) and plain CSS. */
+@theme {
+  --color-cream: #f6ebdd;
+  --color-cream-deep: #efdcc4;
+  --color-peach: #f3c7a5;
+  --color-espresso: #25221e;
+  --color-espresso-soft: #5b544b;
+  --color-orange: #e66b32;
+  --color-orange-deep: #c8401c;
+  --color-olive: #a7b56a;
+
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Anton', 'Impact', sans-serif;
+  --font-script: 'Kaushan Script', cursive;
+}
+
+@layer base {
+  html {
+    color-scheme: only light; /* never auto-darkened: the food photography needs the warm palette */
+  }
+
+  body {
+    background: #f4dfc9;
+    color: var(--color-espresso);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  /* Orange pill button (Retry, Show all, Order Now in the static hero). */
+  .pill-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.7em 1.6em;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ec6a2e 0%, #d4501a 100%);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 12px 26px -12px rgb(207 78 24 / 0.6);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .pill-button:hover {
+    transform: translateY(-2px);
+  }
+}

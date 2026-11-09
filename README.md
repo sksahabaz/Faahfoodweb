@@ -1,6 +1,6 @@
 # 🍔 FAah!! FOOD
 
-> A full-stack food ordering web application built with Java, JSP, Jakarta Servlets, JDBC and MySQL, deployed with Docker and Render.
+> A full-stack food ordering web application: a React (Vite) frontend on a Java backend (Jakarta Servlets, JSON API, JDBC, MySQL), deployed with Docker and Render.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-FAah%21%21%20FOOD-1f6feb?style=for-the-badge)](https://faahfoodweb.onrender.com)
 [![Java](https://img.shields.io/badge/Java-21-orange?style=flat-square)](https://www.oracle.com/java/)
@@ -18,7 +18,7 @@
 
 ## 📖 About
 
-**FAah!! FOOD** is a full-stack food ordering web application that demonstrates a traditional Java web architecture using JSP, Jakarta Servlets, JDBC, DAO layers and MySQL.
+**FAah!! FOOD** is a full-stack food ordering web application: a React single-page frontend (Vite, Tailwind, React Three Fiber) served by Tomcat, talking to a Java backend built with Jakarta Servlets, a JSON API, JDBC, DAO layers and MySQL. Every page, login and signup included, is part of the React app; there are no JSP pages.
 
 Users can create an account, log in, browse restaurants and menus, manage a restaurant-specific cart, proceed through checkout, place orders and view their order history.
 
@@ -52,10 +52,10 @@ The application is deployed as a Dockerized Tomcat application on Render and use
 
 ### Frontend
 
-- HTML
-- CSS
-- JavaScript
-- JSP (JavaServer Pages)
+- React 19 + Vite (single-page app, React Router)
+- Tailwind CSS 4
+- TanStack Query (server state)
+- React Three Fiber / three.js (3D burger)
 
 ### Backend
 
@@ -95,8 +95,8 @@ FAah!! FOOD follows a layered Java web architecture:
                │
                ▼
 ┌──────────────────────────────┐
-│             JSP              │
-│ Presentation / UI Layer      │
+│  React app (Vite build)      │
+│  every page, incl. login     │
 └──────────────┬───────────────┘
                │
                ▼
@@ -309,28 +309,14 @@ Faahfoodweb/
 │       │           └── DBConnection.java
 │       │
 │       └── webapp/
-│           ├── common/
-│           │   ├── footer.jsp
-│           │   └── navbar.jsp
-│           ├── css/
-│           │   └── style.css
-│           ├── images/
-│           ├── js/
-│           │   └── app.js
-│           ├── META-INF/
-│           ├── WEB-INF/
-│           │   ├── lib/
-│           │   └── web.xml
-│           ├── account-check.jsp
-│           ├── cart.jsp
-│           ├── checkout.jsp
-│           ├── login.jsp
-│           ├── menu.jsp
-│           ├── my-orders.jsp
-│           ├── order-confirmation.jsp
-│           ├── payment.jsp
-│           ├── restaurants.jsp
-│           └── signup.jsp
+│           ├── META-INF/context.xml  HTTPS behind Render's proxy, SameSite cookie
+│           └── WEB-INF/
+│               ├── lib/              MySQL connector, Gson, BCrypt
+│               └── web.xml           (no JSP pages: every page is the React app)
+│           (the React build is copied in here: by the Dockerfile, or locally by
+│            `npm run build:webapp`; those generated files are git-ignored)
+│
+├── frontend/                         React app (see frontend/README.md)
 │
 ├── database/
 │   └── schema.sql
@@ -434,17 +420,20 @@ PaymentController
 
 | Endpoint | Controller | Purpose |
 |---|---|---|
-| `/restaurant` | `RestaurantController` | Load restaurants |
-| `/menu` | `MenuController` | Load restaurant menu |
-| `/signup` | `SignupController` | Register user |
-| `/login` | `LoginController` | Authenticate user |
-| `/logout` | `LogoutController` | End user session |
-| `/account-check` | `AccountCheckController` | Account/session checks |
-| `/cart` | `CartController` | Manage cart |
-| `/checkout` | `CheckoutController` | Checkout flow |
-| `/payment` | `PaymentController` | Place/process order |
-| `/order-confirmation` | `OrderConfirmationController` | Display order confirmation |
-| `/my-orders` | `MyOrdersController` | Display order history |
+| `/` | `HomeController` | React app: homepage |
+| `/restaurants/{id}` | `HomeController` | React app: restaurant menu |
+| `/cart` | `CartController` | React app: cart (a POST, from the removed JSP form, changes nothing and goes to `/cart`) |
+| `/checkout` | `CheckoutController` | React app: checkout; guests go to `/login` first |
+| `/order-confirmation/{id}` | `OrderConfirmationController` | React app: order confirmation (`/order-confirmation` alone → the session's last order) |
+| `/my-orders` | `MyOrdersController` | React app: order history; guests go to `/login` first |
+| `/login` | `LoginController` | React app: login, through `POST /api/auth/login`; then the page the user was going to (e.g. `/checkout`), else the homepage |
+| `/signup` | `SignupController` | React app: signup, through `POST /api/auth/signup`; then `/login` (signing up doesn't log in) |
+| `/api/auth/me`, `/api/auth/login`, `/api/auth/signup`, `/api/auth/logout` | `AuthApi` | Session user; login (BCrypt check, new session id); signup (validated, BCrypt-hashed); logout |
+| `/logout` | `LogoutController` | End the session, go to the homepage (the React app uses `POST /api/auth/logout`) |
+| `/restaurant`, `/menu?restaurantId={id}`, `/payment`, `/account-check` | legacy controllers | Old JSP URLs: redirect to `/`, `/restaurants/{id}`, `/checkout`, `/login` |
+| any other page | `NotFoundController` | React app's "page not found" screen (status 404) |
+| `/profile`, `/profile/addresses` | `ProfileController` | My Profile and Saved Addresses (React only; guests go to `/login` first) |
+| `/api/profile`, `/api/profile/avatar` | `ProfileApi` | Edit name/phone/address; upload, show or remove the profile picture (own account only) |
 
 ---
 
@@ -507,11 +496,28 @@ DB_PASSWORD=your_password
 
 Do not commit real credentials to GitHub.
 
+Profile pictures are saved as files (one per user, never in MySQL), in
+`FAAH_UPLOAD_DIR/avatars` when that variable is set, otherwise in
+`{tomcat}/faah-data/avatars`. On Render the container's disk is reset on every deploy,
+so add a persistent disk and set `FAAH_UPLOAD_DIR` to its mount path (e.g. `/var/data`),
+or uploaded pictures disappear after each deploy.
+
 ### 6. Run the application
 
 Start the project using Apache Tomcat 10.1 from Eclipse.
 
-The application uses the `/restaurant` servlet as the configured welcome entry point.
+Every page URL is served the React app by its controller (see `controller/ReactPages.java`),
+so build the frontend into the webapp first:
+`cd frontend && npm ci && npm run build:webapp` (the copied files are git-ignored), then
+start Tomcat. For frontend development,
+`npm run dev` in `frontend/` (see `frontend/README.md`). The Docker image builds and
+includes the React app automatically.
+
+The old JSP storefront and the `FAAH_HOME=react|jsp` switch were removed from the
+application in the Stage 1 cleanup, and the login and signup JSP pages after that (now
+React pages with the same design). They are kept outside the project in
+`../FAah-Food-Legacy-Backup/` (with restore steps) and in Git history (commit `c1c11ea`).
+`FAAH_HOME` is no longer read.
 
 ---
 

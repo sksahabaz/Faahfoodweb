@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Used when the app is deployed from its own folder (the Docker image's webapps/ROOT).
+
+  RemoteIpValve: on Render, HTTPS ends at Render's proxy, which forwards the request to
+  Tomcat over HTTP with X-Forwarded-Proto / X-Forwarded-For. When those headers come from
+  an internal (private-range) proxy address, Tomcat treats the request as HTTPS, so the
+  session cookie gets the Secure flag and redirects stay on https. Requests that don't come
+  through such a proxy (local development) are unaffected.
+
+  CookieProcessor: the session cookie is sent with SameSite=Lax (normal links into the site
+  keep the login; cross-site form posts do not carry it).
+-->
+<Context>
+    <Valve className="org.apache.catalina.valves.RemoteIpValve"
+           remoteIpHeader="X-Forwarded-For"
+           protocolHeader="X-Forwarded-Proto" />
+    <CookieProcessor sameSiteCookies="lax" />
+</Context>

@@ -1,0 +1,25 @@
+# Keep the Docker build context small and free of local files.
+.git
+.settings
+.classpath
+.project
+bin
+build
+**/.env
+**/.env.*
+frontend/node_modules
+frontend/dist
+frontend/public/draco
+
+# React build copied into the webapp for a local Tomcat (npm run build:webapp).
+# The image builds its own copy from frontend/ instead.
+src/main/webapp/index.html
+src/main/webapp/favicon.svg
+src/main/webapp/assets
+src/main/webapp/models
+src/main/webapp/draco
+src/main/webapp/decor
+src/main/webapp/brand
+src/main/webapp/cuisines
+src/main/webapp/confirmation
+src/main/webapp/auth

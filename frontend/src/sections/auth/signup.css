@@ -1,0 +1,356 @@
+/* =============================================================
+   FAah!! FOOD - signup page layout (SignupPage.jsx). Shared styles:
+   auth.css (loaded first).
+
+   One large centered card. From 768 px wide, sizes are written
+   in pixels of the design and multiplied by --u, which follows
+   the viewport height so the card fits common laptop screens.
+   ============================================================= */
+
+/* Scoped to the signup page: all the app's CSS is bundled together, so these layout rules must not reach the login page. */
+.signup-page {
+
+    /* ---------- Background --------------------------------------- */
+
+    & {
+        background:
+            radial-gradient(55% 45% at 50% 45%, rgb(255 250 245 / 0.8), transparent 75%),
+            linear-gradient(160deg, #fdf0e4 0%, #fbe8d8 50%, #f9e0cb 100%);
+    }
+
+    .signup-ribbon {
+        position: absolute;
+        display: block;
+        height: auto;
+    }
+
+    .signup-ribbon--top {
+        top: 0;
+        left: 0;
+        width: min(72vw, 420px);
+    }
+
+    .signup-ribbon--bottom {
+        right: 0;
+        bottom: 0;
+        width: min(100vw, 560px);
+    }
+
+    .signup-sketch {
+        position: absolute;
+        display: none; /* only where there is room beside the card */
+        height: auto;
+        fill: none;
+        stroke: #f09455;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 0.85;
+    }
+
+    .signup-sketch .hill {
+        stroke: #f5bf98;
+        stroke-width: 2.4;
+    }
+
+    .signup-sketch .route {
+        stroke-dasharray: 3 7;
+    }
+
+    .signup-sketch .fill {
+        fill: #fcd9bd;
+    }
+
+    .signup-sketch .fill-soft {
+        fill: #fdeadb;
+    }
+
+
+    /* ---------- Layout ------------------------------------------- */
+
+    .signup-shell {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 24px 16px 32px;
+    }
+
+    .signup-card {
+        max-width: 560px;
+        border-color: rgb(246 211 184 / 0.9);
+        background: rgb(255 248 242 / 0.9);
+        box-shadow:
+            0 0 50px rgb(255 176 120 / 0.22),
+            0 30px 60px -30px rgb(176 84 30 / 0.4);
+    }
+
+    .signup-card .auth-logo--compact {
+        margin-bottom: 20px;
+    }
+
+    .signup-card .auth-title {
+        font-size: 28px;
+    }
+
+    .signup-card .auth-spark--title {
+        top: -26px;
+        right: -30px;
+    }
+
+    .signup-form {
+        gap: 14px;
+    }
+
+    /* Darker icons and placeholders, as in the signup design. */
+    .signup-card .auth-field-icon {
+        stroke: #4b2214;
+        stroke-width: 1.6;
+    }
+
+    .signup-card .auth-field-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .signup-card .auth-field input::placeholder,
+    .signup-card .auth-field textarea::placeholder {
+        color: #54423a;
+    }
+
+
+    /* ---------- Sign Up button: arrow and loading state ---------- */
+
+    .signup-submit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+        background: linear-gradient(180deg, #ff7f22 0%, #f2560f 100%);
+    }
+
+    .signup-submit-arrow {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: transform 0.15s;
+    }
+
+    .signup-submit:hover .signup-submit-arrow {
+        transform: translateX(3px);
+    }
+
+    .signup-spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 2.5px solid rgb(255 255 255 / 0.45);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: signup-spin 0.8s linear infinite;
+    }
+
+    .signup-submit.is-loading .signup-spinner {
+        display: block;
+        order: -1;
+    }
+
+    .signup-submit.is-loading .signup-submit-arrow {
+        display: none;
+    }
+
+
+
+
+    /* ---------- Tablet and desktop ------------------------------- */
+
+    @media (min-width: 768px) {
+        & {
+            /* 1 design pixel, following the viewport height */
+            --u: clamp(0.74px, calc(100vh / 1240), 1px);
+        }
+
+        .signup-shell {
+            padding: calc(28 * var(--u)) 24px;
+        }
+
+        .signup-ribbon--top {
+            width: calc(560 * var(--u));
+        }
+
+        .signup-ribbon--bottom {
+            width: calc(860 * var(--u));
+        }
+
+        .signup-card {
+            width: calc(704 * var(--u));
+            max-width: 100%;
+            padding: calc(30 * var(--u)) calc(52 * var(--u)) calc(44 * var(--u));
+            border-width: 1.5px;
+            border-radius: calc(60 * var(--u));
+        }
+
+        .signup-card .auth-logo--compact {
+            margin-bottom: calc(26 * var(--u));
+        }
+
+        .signup-card .auth-logo--compact .auth-logo-script {
+            font-size: calc(54 * var(--u));
+        }
+
+        .signup-card .auth-logo--compact .auth-logo-food {
+            font-size: calc(26 * var(--u));
+        }
+
+        .signup-card .auth-title {
+            font-size: calc(50 * var(--u));
+        }
+
+        .signup-card .auth-spark--title {
+            top: calc(-44 * var(--u));
+            right: calc(-58 * var(--u));
+            width: calc(60 * var(--u));
+            height: calc(60 * var(--u));
+            stroke-width: 5.5;
+        }
+
+        .signup-card .auth-subtitle {
+            margin-top: calc(14 * var(--u));
+            font-size: max(15px, calc(20.5 * var(--u)));
+        }
+
+        .signup-card .auth-error {
+            margin-top: calc(22 * var(--u));
+            font-size: max(14px, calc(17 * var(--u)));
+        }
+
+        .signup-form {
+            gap: calc(16 * var(--u));
+            margin-top: calc(34 * var(--u));
+        }
+
+        .signup-card .auth-field-icon {
+            left: calc(24 * var(--u));
+            width: max(24px, calc(38 * var(--u)));
+            height: max(24px, calc(38 * var(--u)));
+        }
+
+        .signup-card .auth-field--area .auth-field-icon {
+            top: calc(12 * var(--u));
+        }
+
+        .signup-card .auth-field input,
+        .signup-card .auth-field textarea {
+            height: max(48px, calc(62 * var(--u)));
+            padding-left: calc(86 * var(--u));
+            border-radius: calc(26 * var(--u));
+            font-size: max(16px, calc(20 * var(--u)));
+        }
+
+        .signup-card .auth-field textarea {
+            height: auto;
+            min-height: max(48px, calc(62 * var(--u)));
+            padding-top: calc(15 * var(--u));
+            padding-bottom: calc(12 * var(--u));
+        }
+
+        .signup-card .auth-field:has(.auth-reveal) input {
+            padding-right: calc(80 * var(--u));
+        }
+
+        .signup-card .auth-reveal {
+            right: calc(16 * var(--u));
+        }
+
+        .signup-card .auth-reveal svg {
+            width: max(22px, calc(28 * var(--u)));
+            height: max(22px, calc(28 * var(--u)));
+        }
+
+        .signup-card .auth-field-error {
+            margin-top: calc(-8 * var(--u));
+            margin-left: calc(14 * var(--u));
+            font-size: max(13px, calc(16 * var(--u)));
+        }
+
+        .signup-submit {
+            height: max(52px, calc(76 * var(--u)));
+            margin-top: calc(18 * var(--u));
+            gap: calc(14 * var(--u));
+            font-size: max(18px, calc(28 * var(--u)));
+        }
+
+        .signup-submit-arrow {
+            width: max(22px, calc(30 * var(--u)));
+            height: max(22px, calc(30 * var(--u)));
+        }
+
+        .signup-card .auth-divider {
+            gap: calc(22 * var(--u));
+            margin-top: calc(38 * var(--u));
+            font-size: max(14px, calc(20 * var(--u)));
+        }
+
+        .signup-card .auth-social {
+            gap: calc(26 * var(--u));
+            margin-top: calc(26 * var(--u));
+        }
+
+        .signup-card .auth-social-btn {
+            gap: calc(14 * var(--u));
+            height: max(46px, calc(62 * var(--u)));
+            font-size: max(15px, calc(21 * var(--u)));
+        }
+
+        .signup-card .auth-social-btn svg {
+            width: max(20px, calc(32 * var(--u)));
+            height: max(20px, calc(32 * var(--u)));
+        }
+
+        .signup-card .auth-switch {
+            margin-top: calc(44 * var(--u));
+            font-size: max(15px, calc(22 * var(--u)));
+        }
+
+        .signup-card .auth-switch a {
+            margin-left: calc(18 * var(--u));
+        }
+    }
+
+
+    /* ---------- Wide screens: the line drawings beside the card -- */
+
+    @media (min-width: 1180px) {
+        .signup-sketch {
+            display: block;
+        }
+
+        /* anchored to the screen edges, like the design */
+        .signup-sketch--scooter {
+            left: 1.2vw;
+            top: calc(50% + 80 * var(--u));
+            width: calc(250 * var(--u));
+        }
+
+        .signup-sketch--store {
+            right: 0;
+            top: calc(50% - 60 * var(--u));
+            width: calc(260 * var(--u));
+        }
+    }
+
+}
+
+/* Animations (at-rules can't be nested in the page scope above). */
+@keyframes signup-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

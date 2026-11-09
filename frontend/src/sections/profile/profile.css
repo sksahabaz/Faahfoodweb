@@ -1,0 +1,42 @@
+/* Profile page: full-height column, with the rider and storefront in the bottom corners. */
+
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+.profile-art {
+  display: none;
+}
+
+/* Only where the corners are free of content. */
+@media (min-width: 1280px) and (min-height: 820px) {
+  .profile-art {
+    position: relative;
+    display: block;
+    height: clamp(120px, 11vw, 190px);
+    margin-top: -40px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .profile-art-scooter,
+  .profile-art-store {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: auto;
+  }
+
+  .profile-art-scooter {
+    left: max(12px, 2vw);
+    filter: drop-shadow(0 16px 20px rgb(170 70 20 / 0.2));
+  }
+
+  .profile-art-store {
+    right: 0;
+  }
+}

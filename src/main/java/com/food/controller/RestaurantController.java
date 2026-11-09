@@ -1,35 +1,25 @@
 package com.food.controller;
 
 import java.io.IOException;
-import java.util.List;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import com.food.dao.RestaurantDAO;
-import com.food.daoimpl.RestaurantDAOImpl;
-import com.food.model.Restaurant;
-
+/**
+ * /restaurant was the old JSP restaurant list (restaurants.jsp, removed; kept in the legacy
+ * backup). Old links and bookmarks go to the homepage, which lists the restaurants.
+ */
 @WebServlet("/restaurant")
 public class RestaurantController extends HttpServlet {
 
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    private static final long serialVersionUID = 1L;
 
-		RestaurantDAO restaurantDAO = new RestaurantDAOImpl();
-
-		List<Restaurant> allRestaurants = restaurantDAO.getAllRestaurants();
-
-		request.setAttribute("restaurants", allRestaurants);
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("restaurants.jsp");
-
-		dispatcher.forward(request, response);
-
-	}
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ReactPages.redirect(request, response, "/#restaurants");
+    }
 }
